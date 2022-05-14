@@ -15,6 +15,7 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\Messenger\Bridge\AmazonSqs\Transport\AmazonSqsTransportFactory;
 use Symfony\Component\Messenger\Bridge\Amqp\Transport\AmqpTransportFactory;
 use Symfony\Component\Messenger\Bridge\Beanstalkd\Transport\BeanstalkdTransportFactory;
+use Symfony\Component\Messenger\Bridge\Mercure\Transport\MercureTransportFactory;
 use Symfony\Component\Messenger\Bridge\Redis\Transport\RedisTransportFactory;
 use Symfony\Component\Messenger\EventListener\AddErrorDetailsStampListener;
 use Symfony\Component\Messenger\EventListener\DispatchPcntlSignalListener;
@@ -142,6 +143,12 @@ return static function (ContainerConfigurator $container) {
             ])
 
         ->set('messenger.transport.beanstalkd.factory', BeanstalkdTransportFactory::class)
+
+        ->set('messenger.transport.mercure.factory', MercureTransportFactory::class)
+            ->args([
+                service('mercure.hub.default'),
+            ])
+            ->tag('messenger.transport_factory')
 
         // retry
         ->set('messenger.retry_strategy_locator', ServiceLocator::class)
